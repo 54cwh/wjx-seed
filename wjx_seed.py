@@ -967,10 +967,12 @@ def main():
     # 题型是逐个写死实现的，没实现的题型必须硬失败。
     # 静默留空更糟：问卷星把漏填的必填题判无效，整份答卷直接作废，
     # 而且失败原因和"被反垃圾拦了"长得一模一样，看不出是自己漏填的。
-    todo = [f"q{q['topic']}({q['type']})" for q in questions if q["type"] in UNSUPPORTED]
+    todo = [f"q{q['topic']}({q['type']},type={q['raw_type']})"
+            for q in questions if q["type"] in UNSUPPORTED]
     if todo:
         sys.exit(f"这份问卷里有本脚本还不会填的题型: {todo}\n"
-                 f"在 fill_and_submit() 里加对应分支再跑（题型编号见 TYPE_NAME）。")
+                 f"把问卷链接发给开发者，或在 fill_and_submit() 里加对应分支"
+                 f"（题型编号见 TYPE_NAME）。")
 
     # 解析器出 bug 时最典型的表现就是"选项数=0"，而它要等到提交被拒才暴露。
     # 这里直接硬失败，比事后查错误信息快一个数量级。

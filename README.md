@@ -51,9 +51,9 @@ LLM 一次调用生成**整份**答卷:先定一个人设(年级/家庭环境/�
 需要完全确定的输入。
 
 ```bash
-# answers.sample.json 里有 8 份固定答案,覆盖条件逻辑的不同分支
-.venv/bin/python wjx_seed.py -n 3 --plan   --answers answers.sample.json
-.venv/bin/python wjx_seed.py -n 3 --submit --answers answers.sample.json
+# answers.sample.json 对应下面那份 13 题型测试问卷,照着改即可
+.venv/bin/python wjx_seed.py -n 1 --plan   --answers answers.sample.json
+.venv/bin/python wjx_seed.py -n 1 --submit --answers answers.sample.json
 ```
 
 JSON 格式是 `{题号: 值}` 或 `[{...}, {...}]`(后者按份循环用)。
@@ -70,7 +70,18 @@ JSON 格式是 `{题号: 值}` 或 `[{...}, {...}]`(后者按份循环用)。
 | 量表 / 评价 / 单选 | 选项值或数字 | `"6":"4"`、`"13":"4"`、`"11":"2"` |
 | 多选 | 选中项 `┋` 分隔 | `"12":"1┋3"` |
 
-仓库里的 `answers.sample.json` 是自动生成的样例,可以照着改。
+仓库里的 `answers.sample.json` 对应这份 13 题型的测试问卷
+`https://v.wjx.cn/vm/e2cmwFI.aspx`,覆盖上表全部格式,照着改即可。
+
+### 跑测试
+
+```bash
+.venv/bin/pip install -r requirements-dev.txt
+.venv/bin/pytest          # 20 项:题型识别 / 取值校验 / 随机兜底 / 条件逻辑
+```
+
+`selfcheck()` 是运行时守卫(每次跑脚本前执行);测试套件把它覆盖的逻辑拆成可单独
+定位的用例,并补了纯函数边界。
 
 参数:`-n` 份数 · `--plan` 只演练 · `--submit` 真提交 · `--seed` 固定随机种子 ·
 `--context` 问卷背景(喂给 LLM) · `--answers` 固定答案文件 · `--gap MIN MAX` 提交间隔秒数
