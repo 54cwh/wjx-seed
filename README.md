@@ -19,12 +19,15 @@
 
 ```bash
 git clone https://github.com/54cwh/wjx-seed && cd wjx-seed
-python3 -m venv .venv && .venv/bin/pip install playwright
-.venv/bin/playwright install chromium        # 或用系统 Chrome,见下
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 export WJX_URL=https://www.wjx.cn/vm/xxxxxx.aspx   # 填答链接,后台「分享链接」
 export LLM_API_KEY=sk-...                        # 任意 OpenAI 兼容端点
 ```
+
+脚本用 `channel="chrome"` 启动**系统已装的 Google Chrome**(启动参数带 `--no-sandbox`),
+所以不用 `playwright install` 下载 Chromium。想改成自带 Chromium 就把 `fill_and_submit`
+所在文件里的 `channel="chrome"` 删掉,然后跑 `.venv/bin/playwright install chromium`。
 
 ### 纯 AI 模式(看填写质量)
 
@@ -61,8 +64,6 @@ JSON 格式是 `{题号: 值}` 或 `[{...}, {...}]`(后者按份循环用)。
 
 其他环境变量:`WJX_URL`(必填)· `LLM_API_KEY` · `LLM_BASE_URL`(默认 `https://api.deepseek.com/v1`)·
 `LLM_MODEL`(默认 `deepseek-chat`)。
-
-没装 Chromium 的话脚本会回退到系统 Chrome(`channel="chrome"`,启动参数带 `--no-sandbox`)。
 
 ## 原理
 
